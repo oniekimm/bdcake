@@ -1,11 +1,11 @@
-import * as THREE from 'three';
-import { PlaneBufferGeometry } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import * as THREE from "three";
+import { PlaneBufferGeometry } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 // import DisplaceMaterial from './displace-material';
-import DepthMaterial from './depth-material';
+import DepthMaterial from "./depth-material";
 
-import { store } from '/@/store/index';
+import { store } from "/@/store/index";
 
 // const svgLoader = new SVGLoader();
 // const textureLoader = new THREE.TextureLoader();
@@ -100,9 +100,7 @@ class Beanie {
 
     // this.object.add(this.mesh);
 
-    this.texture = new THREE.TextureLoader().load(
-      'tex/0001_NEW_NOTABLE_ONETEX4_Edit_02.jpg'
-    );
+    this.texture = new THREE.TextureLoader().load("tex/cakebake.jpg");
 
     this.material = new DepthMaterial();
     this.material.uniforms.map.value = this.texture;
@@ -111,7 +109,7 @@ class Beanie {
 
     this.loader = new GLTFLoader();
     this.loader.load(
-      'models/0001_NEW_NOTABLE_ONETEX4_1_Export_01.glb',
+      "models/cake04.glb",
       (object) => {
         // object.traverse((child) => {
         //   if (child instanceof THREE.Mesh) {
@@ -120,27 +118,27 @@ class Beanie {
         // });
         console.log(object);
 
-        this.mesh = object.scene.children[2];
+        this.mesh = object.scene.children[0];
         this.mesh.material = this.material;
 
         // this.mesh.rotation.x = (180 * Math.PI) / 180;
 
-        // var scale = 2;
-        this.mesh.scale.set(3, 3, 3);
+        var scale = 3;
+        this.mesh.scale.set(4, 1, 4);
         // this.mesh.scale.x = scale;
-        // this.mesh.scale.y = scale;
+        // this.mesh.scale.y = 2;
         // this.mesh.scale.z = scale;
 
         // this.object.position.z = 50;
         // this.object.position.y = 20;
         this.object.add(this.mesh);
-        console.log('ok');
+        console.log("ok");
       },
       (e) => {
-        console.log('progress', e);
+        console.log("progress", e);
       },
       (e) => {
-        console.log('error', e);
+        console.log("error", e);
       }
     );
 
@@ -194,7 +192,7 @@ class Beanie {
 
     if (this.id === 0) {
       this.isActive = true;
-      console.log('active');
+      console.log("active");
     }
   }
 
@@ -211,8 +209,8 @@ class Beanie {
   };
 
   destroy() {
-    window.removeEventListener('click', this.onWClick);
-    window.removeEventListener('touchend', this.onWClick);
+    window.removeEventListener("click", this.onWClick);
+    window.removeEventListener("touchend", this.onWClick);
 
     this.isActive = false;
 
@@ -222,7 +220,7 @@ class Beanie {
     this.mesh = null;
     // this.removeEvents();
 
-    window.removeEventListener('click', this.onWClick);
+    window.removeEventListener("click", this.onWClick);
     if (this.val1Watcher) {
       this.val1Watcher();
       this.val2Watcher();
@@ -283,7 +281,7 @@ class Beanie {
     } else {
       if (this.video) {
         this.video.pause();
-        this.video.removeAttribute('src');
+        this.video.removeAttribute("src");
 
         // clear update interval
         if (this.updateInterval) {
