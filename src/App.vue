@@ -1,6 +1,6 @@
 <template>
-  <p style="color: black">hi</p>
-  <!-- <GL :scroll="scrollY" /> -->
+  <p style="color: black">HAPPY BIRTHDAY</p>
+  <GL :scroll="scrollY" />
   <!-- <Controls /> -->
   <div class="scroll-wrap" ref="scrollwrap">
     <div class="scrollH" ref="scrollH" />
@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import GL from './components/GL.vue';
-import Controls from './components/Controls.vue';
-import Data from './data/media';
+import GL from "./components/GL.vue";
+import Controls from "./components/Controls.vue";
+import Data from "./data/media";
 
 export default {
   components: {
@@ -40,8 +40,8 @@ export default {
     // this.prevScrollY = 0;
     // this.scrollDif = 0;
 
-    window.addEventListener('scroll', this.onScroll);
-    window.addEventListener('resize', this.onResize);
+    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener("resize", this.onResize);
     this.$nextTick(() => {
       this.onResize();
     });
@@ -49,7 +49,7 @@ export default {
     // IF MOBILE request deviceorientation
     // Check if is IOS 13 when page loads.
     this.gyroPresent = false;
-    window.addEventListener('devicemotion', (event) => {
+    window.addEventListener("devicemotion", (event) => {
       if (
         event.rotationRate.alpha ||
         event.rotationRate.beta ||
@@ -61,11 +61,11 @@ export default {
       if (
         !this.gyroPresent &&
         window.DeviceMotionEvent &&
-        typeof window.DeviceMotionEvent.requestPermission === 'function'
+        typeof window.DeviceMotionEvent.requestPermission === "function"
       ) {
         // Everything here is just a lazy banner. You can do the banner your way.
-        this.banner = document.createElement('div');
-        this.banner.classList.add('devicemotion');
+        this.banner = document.createElement("div");
+        this.banner.classList.add("devicemotion");
         this.banner.innerHTML = `<div style="z-index: 100; position: absolute; width: 100%; color: #fff"><p style="padding: 10px">Click here to enable DeviceMotion</p></div>`;
         this.banner.onclick = this.clickRequestDeviceMotionEvent; // You NEED to bind the function into a onClick event. An artificial 'onClick' will NOT work.
         document.body.appendChild(this.banner);
@@ -76,15 +76,15 @@ export default {
     this.banner.onclick = null;
     document.body.removeChild(this.banner);
 
-    window.removeEventListener('scroll', this.onScroll);
-    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
   },
   methods: {
     onScroll(e) {
       this.scrollY = window.scrollY;
     },
     onResize(e) {
-      this.$refs.scrollH.style.height = innerHeight * Data.length + 'px';
+      this.$refs.scrollH.style.height = innerHeight * Data.length + "px";
     },
     clickRequestDeviceMotionEvent() {
       this.banner.onclick = null;
@@ -92,18 +92,18 @@ export default {
 
       window.DeviceMotionEvent.requestPermission()
         .then((response) => {
-          if (response === 'granted') {
+          if (response === "granted") {
             window.addEventListener(
-              'devicemotion',
+              "devicemotion",
               () => {
-                console.log('DeviceMotion permissions granted.');
+                console.log("DeviceMotion permissions granted.");
               },
               (e) => {
                 throw e;
               }
             );
           } else {
-            console.log('DeviceMotion permissions not granted.');
+            console.log("DeviceMotion permissions not granted.");
           }
         })
         .catch((e) => {
@@ -112,9 +112,9 @@ export default {
     },
     onMuteClick() {
       if (this.muted) {
-        this.$store.commit('setMute', false);
+        this.$store.commit("setMute", false);
       } else {
-        this.$store.commit('setMute', true);
+        this.$store.commit("setMute", true);
       }
     },
   },
