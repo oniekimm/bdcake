@@ -1,6 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 // import fragmentShader from './noise.frag';
-import glsl from '/@/lib/glsl';
+import glsl from "/@/lib/glsl";
 
 const vertexShader = glsl`
     varying vec2 vUv;
@@ -58,9 +58,10 @@ const fragmentShader = glsl`
         vec4 t3 = texture2D(map, nVuv).rgba;
         
 
-        vec4 outC = t3;
-        outC *= 1.0 - sinn;
-        gl_FragColor = vec4(vec3(outC), 0.2);
+        // vec4 outC = t3;
+        vec4 outC = vec4(1.0);
+        // outC *= 1.0 - sinn;
+        gl_FragColor = vec4(vec3(outC), 1);
     }
 `;
 

@@ -1,120 +1,100 @@
 <template>
-  <p style="color: black">HAPPY BIRTHDAY</p>
-  <GL :scroll="scrollY" />
-  <!-- <Controls /> -->
-  <div class="scroll-wrap" ref="scrollwrap">
-    <div class="scrollH" ref="scrollH" />
+  <div class="body" ref="body">
+    <h1 class="title-top">happy birthday</h1>
+    <h1 class="title-bottom">robert</h1>
+    <!-- <p ref="logo" style="opacity: 0">i love u</p> -->
+
+    <div ref="logo" class="lightOn" style="opacity: 0">
+      <div class="text1">
+        <img
+          src="tex/letter1.png"
+          alt="Girl in a jacket"
+          width="500"
+          height="600"
+        />
+      </div>
+      <div class="text2">
+        <img
+          src="tex/letter1.png"
+          alt="Girl in a jacket"
+          width="500"
+          height="600"
+        />
+      </div>
+    </div>
   </div>
+  <!-- <div>
+    <div class="text1">
+      <img
+        src="tex/letter1.png"
+        alt="Girl in a jacket"
+        width="500"
+        height="600"
+      />
+    </div>
+  </div> -->
+
+  <GL />
 </template>
 
 <script>
 import GL from "./components/GL.vue";
-import Controls from "./components/Controls.vue";
-import Data from "./data/media";
 
 export default {
   components: {
     GL,
-    Controls,
   },
   data() {
     return {
-      scrollY: 0,
-      // scrollDif: 0,
+      opacity: 0,
+      lightOn: false,
     };
   },
-  computed: {
-    muted() {
-      return this.$store.state.muted;
-    },
-  },
-  // watch: {
-  //   scrollDif: {
-  //     handler(to, from) {
-  //       this.$store.commit('setScrollDif', this.scrollDif);
-  //     },
-  //   },
-  // },
+  computed: {},
+  watch: {},
   mounted() {
-    this.scrollY = 0;
-    // this.prevScrollY = 0;
-    // this.scrollDif = 0;
-
-    window.addEventListener("scroll", this.onScroll);
-    window.addEventListener("resize", this.onResize);
-    this.$nextTick(() => {
-      this.onResize();
-    });
-
-    // IF MOBILE request deviceorientation
-    // Check if is IOS 13 when page loads.
-    this.gyroPresent = false;
-    window.addEventListener("devicemotion", (event) => {
-      if (
-        event.rotationRate.alpha ||
-        event.rotationRate.beta ||
-        event.rotationRate.gamma
-      )
-        this.gyroPresent = true;
-    });
-    setTimeout(() => {
-      if (
-        !this.gyroPresent &&
-        window.DeviceMotionEvent &&
-        typeof window.DeviceMotionEvent.requestPermission === "function"
-      ) {
-        // Everything here is just a lazy banner. You can do the banner your way.
-        this.banner = document.createElement("div");
-        this.banner.classList.add("devicemotion");
-        this.banner.innerHTML = `<div style="z-index: 100; position: absolute; width: 100%; color: #fff"><p style="padding: 10px">Click here to enable DeviceMotion</p></div>`;
-        this.banner.onclick = this.clickRequestDeviceMotionEvent; // You NEED to bind the function into a onClick event. An artificial 'onClick' will NOT work.
-        document.body.appendChild(this.banner);
-      }
-    }, 1000);
+    // navigator.mediaDevices
+    //   .getUserMedia({ video: false, audio: true })
+    //   .then((stream) => {
+    //     const audioContext = new AudioContext();
+    //     const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(
+    //       stream
+    //     );
+    //     this.analyserNode = audioContext.createAnalyser();
+    //     mediaStreamAudioSourceNode.connect(this.analyserNode);
+    //     this.pcmData = new Float32Array(this.analyserNode.fftSize);
+    //     this.animFrame = window.requestAnimationFrame(this.tick);
+    //   })
+    //   .catch((err) => {
+    //     console.log("u got an error:" + err);
+    //   });
   },
   beforeUnmount() {
-    this.banner.onclick = null;
-    document.body.removeChild(this.banner);
-
-    window.removeEventListener("scroll", this.onScroll);
-    window.removeEventListener("resize", this.onResize);
+    // window.cancelAnimationFrame(this.animFrame);
+    // this.animFrame = null;
   },
   methods: {
-    onScroll(e) {
-      this.scrollY = window.scrollY;
-    },
-    onResize(e) {
-      this.$refs.scrollH.style.height = innerHeight * Data.length + "px";
-    },
-    clickRequestDeviceMotionEvent() {
-      this.banner.onclick = null;
-      document.body.removeChild(this.banner);
+    tick() {
+      this.analyserNode.getFloatTimeDomainData(this.pcmData);
+      let sumSquares = 0.0;
+      for (const amplitude of this.pcmData) {
+        sumSquares += amplitude * amplitude;
+      }
 
-      window.DeviceMotionEvent.requestPermission()
-        .then((response) => {
-          if (response === "granted") {
-            window.addEventListener(
-              "devicemotion",
-              () => {
-                console.log("DeviceMotion permissions granted.");
-              },
-              (e) => {
-                throw e;
-              }
-            );
-          } else {
-            console.log("DeviceMotion permissions not granted.");
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    },
-    onMuteClick() {
-      if (this.muted) {
-        this.$store.commit("setMute", false);
+      if ((sumSquares / this.pcmData.length) * 5 > 1) {
+        this.lightOn = true;
+      }
+
+      if (this.lightOn == true) {
+        this.$refs.logo.style.opacity = 1;
+        this.$refs.body.style.background = "rgba(0, 0, 0, 0)";
       } else {
-        this.$store.commit("setMute", true);
+        this.$refs.logo.style.opacity = (sumSquares / this.pcmData.length) * 10;
+        this.$refs.body.style.background =
+          "radial-gradient(circle, transparent, rgba(0,0,0, " +
+          (1 - (sumSquares / this.pcmData.length) * 10) +
+          "), black, black )";
+        this.animFrame = window.requestAnimationFrame(this.tick);
       }
     },
   },
@@ -127,13 +107,34 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @include fontS();
+  background: white;
+  // background-color: rgba(0, 0, 0, 1);
+  transition: background 0.5s;
+  margin: 0;
+  padding: 0;
+}
+
+.body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  // background: radial-gradient(
+  //   circle,
+  //   transparent,
+  //   rgba(0, 0, 0, 1),
+  //   black,
+  //   black
+  // );
+  // background-color: rgba(0, 0, 0, 1);
+  transition: background-color 0.5s;
 }
 
 h1 {
   position: fixed;
   z-index: 100;
-  top: $padding;
-  left: $padding;
+  // top: $padding;
+  // left: $padding;
   mix-blend-mode: difference;
   font-weight: normal;
   @include fontS();
@@ -141,62 +142,72 @@ h1 {
   padding: 0;
 }
 
-.preorder {
-  position: fixed;
-  z-index: 100;
-  top: $padding * 4;
-  left: $padding;
-  mix-blend-mode: difference;
-  @include fontS();
-  text-decoration: none;
-}
-
-.film {
-  position: fixed;
-  z-index: 100;
-  top: $padding * 3;
-  left: $padding;
-  mix-blend-mode: difference;
-  @include fontS();
-  text-decoration: none;
-}
-
-.collec {
-  padding-left: 50px;
-}
-
-.scroll-wrap {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  display: none;
-
-  .scrollH {
-    width: 1px;
-    height: 300vh;
-  }
-}
-
-.item {
-  position: fixed;
-  top: 50%;
-  @include fontS();
-  z-index: 10;
-  // right: $padding;
-  will-change: true;
-}
-.devicemotion {
-  position: fixed;
-  z-index: 100;
-  top: 50%;
-  width: 50%;
-}
-
-.mute {
-  position: fixed;
-  z-index: 500;
+.title-top {
   top: $padding;
-  right: $padding;
-  cursor: pointer;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.title-bottom {
+  bottom: $padding;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.test {
+  position: fixed;
+  z-index: 100;
+  // top: $padding;
+  // left: $padding;
   mix-blend-mode: difference;
+  font-weight: normal;
+  @include fontS();
+  margin: 0;
+  padding: 0;
+  opacity: 1.5;
+}
+
+.lightOn {
+  transition: opacity 0.5s;
+  position: relative;
+  z-index: 100;
+}
+
+.text1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 30vw;
+  height: 100vh;
+  padding: 5vw;
+  box-sizing: border-box;
+  // background-color: pink;
+}
+
+.text2 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  width: 30vw;
+  height: 100vh;
+  padding: 5vw;
+  box-sizing: border-box;
+
+  // background-color: pink;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  z-index: 100;
+  position: relative;
+}
+
+p {
+  position: relative;
+  z-index: 100;
+  color: black;
 }
 </style>

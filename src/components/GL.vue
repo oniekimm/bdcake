@@ -4,10 +4,10 @@
 </template>
 
 <script>
-import * as THREE from 'three';
+import * as THREE from "three";
 // import Item from './gl/item';
-import Beanie from './gl/beanie';
-import GridMaterial from './gl/grid-material';
+import Beanie from "./gl/beanie";
+import GridMaterial from "./gl/grid-material";
 // import BGMaterial from './gl/bg-material';
 // import CompMaterial from './gl/comp-material';
 // import * as Vue from 'vue';
@@ -17,11 +17,7 @@ import GridMaterial from './gl/grid-material';
 const planeGeo = new THREE.PlaneBufferGeometry(1, 1);
 
 export default {
-  props: {
-    scroll: {
-      type: Number,
-    },
-  },
+  props: {},
   data() {
     return {
       center: -1,
@@ -51,14 +47,18 @@ export default {
     this.myA = 0;
     this.myTarget = 0;
 
-    this.targetXRotation = 0;
+    this.targetXRotation = 20;
     this.currentRotationX = 5;
 
     this.time = 0;
 
     this.rotationY = 0;
 
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.$refs.canvas });
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.$refs.canvas,
+      alpha: true,
+    });
+    this.renderer.setClearColor(0xffffff, 0);
     this.renderer.setSize(innerWidth, innerHeight);
     // this.renderer.setPixelRatio = ;
     // this.renderer.setClearColor(0xffffff, 1.0);
@@ -83,8 +83,8 @@ export default {
       1000
     );
     this.camera.position.z = 20;
-    this.camera.position.y = 5;
-    this.camera.lookAt(new THREE.Vector3(0, 3, 0));
+    this.camera.position.y = 0;
+    // this.camera.lookAt(new THREE.Vector3(0, 100, 0));
 
     this.beanie = new Beanie({
       addTo: this.scene,
@@ -105,7 +105,7 @@ export default {
     //   tex: { type: 't', value: checkerBoardTex },
     // };
 
-    this.gridTex = new THREE.TextureLoader().load('tex/checkerboard.jpg');
+    this.gridTex = new THREE.TextureLoader().load("tex/checkerboard.jpg");
     this.gridTex.wrapS = THREE.RepeatWrapping;
     this.gridTex.wrapT = THREE.RepeatWrapping;
     this.gridTex.repeat.set(22, 22);
@@ -139,21 +139,21 @@ export default {
     ]);
 
     // itemSize = 3 because there are 3 values (components) per vertex
-    geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 
     this.linesObject = new THREE.Object3D();
     this.scene.add(this.linesObject);
 
     var line = new THREE.Line(geometry, material);
-    this.linesObject.add(line);
+    // this.linesObject.add(line);
 
     var lineX = new THREE.Line(geometry, material);
     lineX.rotation.y = (90 * Math.PI) / 180;
-    this.linesObject.add(lineX);
+    // this.linesObject.add(lineX);
 
     var lineZ = new THREE.Line(geometry, material);
     lineZ.rotation.z = (90 * Math.PI) / 180;
-    this.linesObject.add(lineZ);
+    // this.linesObject.add(lineZ);
 
     // this.tmaterial = new THREE.ShaderMaterial( {
 
@@ -169,14 +169,14 @@ export default {
 
     // var tmaterial = new THREE.MeshNormalMaterial({side: 1, wireframe: false});
     this.tube = new THREE.Mesh(tgeometry, this.tmaterial);
-    this.scene.add(this.tube);
+    // this.scene.add(this.tube);
 
     // EVENTS
-    window.addEventListener('resize', this.onResize);
+    window.addEventListener("resize", this.onResize);
 
-    window.addEventListener('mousedown', this.onMouseDown);
-    window.addEventListener('mouseup', this.onMouseUp);
-    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener("mousedown", this.onMouseDown);
+    window.addEventListener("mouseup", this.onMouseUp);
+    window.addEventListener("mousemove", this.onMouseMove);
 
     // window.addEventListener('deviceorientation', this.onDeviceOrientation);
 
@@ -186,11 +186,11 @@ export default {
     this.onResize();
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener("resize", this.onResize);
 
-    window.removeEventListener('mousedown', this.onMouseDown);
-    window.removeEventListener('mouseup', this.onMouseUp);
-    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener("mousedown", this.onMouseDown);
+    window.removeEventListener("mouseup", this.onMouseUp);
+    window.removeEventListener("mousemove", this.onMouseMove);
 
     // window.removeEventListener('deviceorientation', this.onDeviceOrientation);
 
@@ -218,6 +218,7 @@ export default {
 
       this.rotationY += 0.003;
       this.totalRotation = this.rotationY + this.targetOffset * 0.01;
+      // this.totalRotation = 0.1;
 
       if (this.mouseDown) {
         this.currentRotationX = this.myA * 15.0 + 5;
@@ -229,7 +230,7 @@ export default {
         (this.currentRotationX - this.targetXRotation) * 0.1;
 
       this.camera.position.y = this.targetXRotation;
-      this.camera.lookAt(new THREE.Vector3(0, 3, 0));
+      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       this.tmaterial.uniforms.time.value = this.time;
       this.tube.rotation.y = this.totalRotation * 0.5;

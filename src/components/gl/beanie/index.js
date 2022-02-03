@@ -125,6 +125,7 @@ class Beanie {
 
         var scale = 3;
         this.mesh.scale.set(4, 1, 4);
+        this.mesh.position.y = -2;
         // this.mesh.scale.x = scale;
         // this.mesh.scale.y = 2;
         // this.mesh.scale.z = scale;
