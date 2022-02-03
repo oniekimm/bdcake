@@ -124,7 +124,7 @@ class Beanie {
         // this.mesh.rotation.x = (180 * Math.PI) / 180;
 
         var scale = 3;
-        this.mesh.scale.set(4, 1, 4);
+        this.mesh.scale.set(4.5, 1, 4.5);
         this.mesh.position.y = -2;
         // this.mesh.scale.x = scale;
         // this.mesh.scale.y = 2;

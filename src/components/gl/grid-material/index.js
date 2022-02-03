@@ -53,13 +53,13 @@ const fragmentShader = glsl`
         //   nVuv.y *= 1.0 - 0.5 * sinn;
         // }
 
-        nVuv *= 1.0 + sinn*0.1;
+        // nVuv *= 1.0 + sinn*0.1;
 
         vec4 t3 = texture2D(map, nVuv).rgba;
         
 
-        // vec4 outC = t3;
-        vec4 outC = vec4(1.0);
+        vec4 outC = t3;
+        // vec4 outC = vec4(1.0);
         // outC *= 1.0 - sinn;
         gl_FragColor = vec4(vec3(outC), 1);
     }

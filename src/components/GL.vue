@@ -105,7 +105,7 @@ export default {
     //   tex: { type: 't', value: checkerBoardTex },
     // };
 
-    this.gridTex = new THREE.TextureLoader().load("tex/checkerboard.jpg");
+    this.gridTex = new THREE.TextureLoader().load("tex/sky.jpeg");
     this.gridTex.wrapS = THREE.RepeatWrapping;
     this.gridTex.wrapT = THREE.RepeatWrapping;
     this.gridTex.repeat.set(22, 22);
@@ -216,9 +216,9 @@ export default {
 
       this.targetOffset += (this.offset - this.targetOffset) * 0.1;
 
-      this.rotationY += 0.003;
+      this.rotationY += 0.001;
       this.totalRotation = this.rotationY + this.targetOffset * 0.01;
-      // this.totalRotation = 0.1;
+      // this.totalRotation = 0.0;
 
       if (this.mouseDown) {
         this.currentRotationX = this.myA * 15.0 + 5;
@@ -233,7 +233,7 @@ export default {
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       this.tmaterial.uniforms.time.value = this.time;
-      this.tube.rotation.y = this.totalRotation * 0.5;
+      this.tube.rotation.y = this.totalRotation * 0.1;
       this.linesObject.rotation.y = this.totalRotation * 0.5;
       this.beanie.tick(this.time, this.totalRotation);
       // this.tube.rotation.y += 0.001;
